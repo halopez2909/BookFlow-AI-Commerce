@@ -146,4 +146,3 @@ Dev8 (Toasts & errores): Juan Sebastian Rodriguez Jimenez
 Para incidencias: abrir un Issue con logs y pasos para reproducir.
 Licencia
 
-(Agregar licencia si aplica)
