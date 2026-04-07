@@ -32,7 +32,7 @@ Variables de entorno
 
 Instalación y ejecución local (sin Docker)
 1. Clonar y entrar al repo:
-```bash
+
 git clone <repo-url>
 cd frontend-bookflow-admin
 
