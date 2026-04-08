@@ -1,0 +1,110 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: bookflow_postgres
+    environment:
+      POSTGRES_USER: bookflow
+      POSTGRES_PASSWORD: bookflow123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    networks:
+      - bookflow_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bookflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  auth-service:
+    build: ./auth-service
+    container_name: bookflow_auth
+    ports:
+      - "8001:8001"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: bookflow_inventory
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./inventory-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  catalog-service:
+    build: ./catalog-service
+    container_name: bookflow_catalog
+    ports:
+      - "8003:8003"
+    env_file:
+      - ./catalog-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  ai-enrichment-service:
+    build: ./ai-enrichment-service
+    container_name: bookflow_enrichment
+    ports:
+      - "8004:8004"
+    env_file:
+      - ./ai-enrichment-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  bff-bookflow:
+    build: ./bff-bookflow
+    container_name: bookflow_bff
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./bff-bookflow/.env
+    depends_on:
+      auth-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
+      catalog-service:
+        condition: service_started
+      ai-enrichment-service:
+        condition: service_started
+    networks:
+      - bookflow_network
+
+  frontend-bookflow:
+    build: ./frontend-bookflow
+    container_name: bookflow_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - bff-bookflow
+    networks:
+      - bookflow_network
+
+networks:
+  bookflow_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
