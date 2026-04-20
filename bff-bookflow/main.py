@@ -6,6 +6,12 @@ from app.routers.auth_router import router as auth_router
 from app.routers.inventory_router import router as inventory_router
 from app.routers.catalog_router import router as catalog_router
 from app.routers.config_router import router as config_router
+from app.routers.normalization_router import router as normalization_router
+from app.routers.pricing_router import router as pricing_router
+from app.routers.audit_router import router as audit_router
+from app.routers.integration_router import router as integration_router
+from app.routers.system_router import router as system_router
+
 
 load_dotenv()
 
@@ -25,6 +31,12 @@ app.include_router(auth_router)
 app.include_router(inventory_router)
 app.include_router(catalog_router)
 app.include_router(config_router)
+app.include_router(normalization_router)
+app.include_router(pricing_router)
+app.include_router(audit_router)
+app.include_router(integration_router)
+app.include_router(system_router)
+
 
 
 @app.get("/health")
