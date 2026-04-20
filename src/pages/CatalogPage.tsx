@@ -3,78 +3,69 @@ import { useCatalog } from '../hooks/useCatalog';
 import { BookCard } from '../components/catalog/BookCard';
 import { FilterBar } from '../components/catalog/FilterBar';
 import { SkeletonCard } from '../components/catalog/SkeletonCard';
-import { EmptyState } from '../components/shared/EmptyState';
 
 export const CatalogPage = () => {
-  // Estados para los filtros
+  // 1. Estados para los filtros (obligatorios para el Sprint 2)
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [category, setCategory] = useState('');
+  const [availableOnly, setAvailableOnly] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
 
-  // Usamos nuestro hook inteligente
+  // 2. Llamada al hook con todos los parámetros
   const { 
     data, 
-    isLoading, 
-    isError, 
     fetchNextPage, 
     hasNextPage, 
-    isFetchingNextPage 
-  } = useCatalog(searchTerm, categoryId);
-
-  // 1. Estado de Error
-  if (isError) {
-    return (
-      <div className="text-center p-20">
-        <h2 className="text-2xl font-bold text-red-600">¡Ups! Algo salió mal</h2>
-        <p className="text-gray-600">No pudimos conectar con el servidor.</p>
-        <button 
-        onClick={() => window.location.reload()}
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-        >
-       Reintentar
-       </button>
-      </div>
-    );
-  }
+    isLoading 
+  } = useCatalog(
+    searchTerm, 
+    category, 
+    availableOnly, 
+    minPrice, 
+    maxPrice
+  );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Catálogo de Libros</h1>
-        <p className="text-gray-500">Explora nuestra colección disponible.</p>
-      </header>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">Catálogo de Libros</h1>
 
-      {/* Barra de Filtros */}
-      <FilterBar onFilterChange={setSearchTerm} />
+      {/* 3. FilterBar con todas las funciones de actualización de estado */}
+      <FilterBar 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        category={category}
+        setCategory={setCategory}
+        availableOnly={availableOnly}
+        setAvailableOnly={setAvailableOnly}
+        minPrice={minPrice}
+        setMinPrice={setMinPrice}
+        maxPrice={maxPrice}
+        setMaxPrice={setMaxPrice}
+      />
 
-      {/* Grid de Libros o Skeletons */}
+      {/* 4. Renderizado de la cuadrícula del catálogo */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {isLoading ? (
-          // Mostramos 8 esqueletos mientras carga la primera vez
+          // Muestra los esqueletos de carga con espacio para imagen
           Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-        ) : data?.pages[0].books.length === 0 ? (
-          // Si no hay resultados
-          <div className="col-span-full">
-            <EmptyState message={`No hay libros que coincidan con "${searchTerm}"`} />
-          </div>
         ) : (
-          // Mapeamos las páginas de libros (Infinite Query)
           data?.pages.map((page) =>
-            page.books.map((book: any) => (
+            page.books.map((book) => (
               <BookCard key={book.id} book={book} />
             ))
           )
         )}
       </div>
 
-      {/* Botón Cargar Más */}
+      {/* 5. Control de paginación */}
       {hasNextPage && (
-        <div className="flex justify-center mt-12 mb-20">
-          <button
+        <div className="flex justify-center mt-8">
+          <button 
             onClick={() => fetchNextPage()}
-            disabled={isFetchingNextPage}
-            className="bg-white border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-full font-bold hover:bg-blue-50 transition-colors disabled:opacity-50"
+            className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors"
           >
-            {isFetchingNextPage ? 'Cargando más...' : 'Cargar más libros'}
+            Cargar más libros
           </button>
         </div>
       )}

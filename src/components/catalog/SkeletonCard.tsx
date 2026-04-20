@@ -1,19 +1,12 @@
 export const SkeletonCard = () => {
   return (
-    <div className="border rounded-lg p-4 shadow-sm bg-white animate-pulse">
-      {/* Espacio para la imagen */}
-      <div className="h-48 bg-gray-200 rounded-md mb-4"></div>
-      
-      {/* Línea para el título */}
-      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-      
-      {/* Línea para el autor */}
-      <div className="h-3 bg-gray-200 rounded w-1/2 mb-4"></div>
-      
-      {/* Botón/Tag inferior */}
-      <div className="flex justify-between items-center">
-        <div className="h-6 bg-gray-200 rounded w-20"></div>
-        <div className="h-4 bg-gray-200 rounded w-16"></div>
+    <div className="border rounded-lg shadow-sm bg-white flex flex-col animate-pulse h-full">
+      <div className="w-full h-48 bg-gray-200 rounded-t-lg"></div>
+      <div className="p-4 flex flex-col gap-3 flex-grow">
+        <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-10 bg-gray-200 rounded w-full mt-auto"></div>
       </div>
     </div>
   );
