@@ -73,6 +73,19 @@ services:
     networks:
       - bookflow_network
 
+
+  normalization-service:
+    build: ./normalization-service
+    container_name: bookflow_normalization
+    ports:
+      - "8005:8005"
+    env_file:
+      - ./normalization-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
   bff-bookflow:
     build: ./bff-bookflow
     container_name: bookflow_bff
