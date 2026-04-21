@@ -4,15 +4,13 @@
     "lib": ["DOM", "ES2020"],
     "jsx": "react-jsx",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "baseUrl": "./src",
-    "types": ["vite/client", "vitest/globals"],
-    "ignoreDeprecations": "6.0"
+    "types": ["vite/client", "vitest/globals"]
   },
   "include": ["src", "tests"]
 }

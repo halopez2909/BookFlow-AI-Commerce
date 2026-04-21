@@ -6,5 +6,5 @@ test("renders file input and button", () => {
   render(<FileUploader onResult={() => {}} />);
   const input = document.querySelector("input[type=file]");
   expect(input).toBeTruthy();
-  expect(screen.getByText(/Subir archivo/i)).toBeInTheDocument();
+expect(screen.getByText(/Upload File/i)).toBeInTheDocument();
 });

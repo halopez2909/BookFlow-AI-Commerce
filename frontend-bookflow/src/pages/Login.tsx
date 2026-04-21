@@ -21,7 +21,14 @@ export default function Login() {
       dispatch({ type: 'LOGIN', payload: { token: data.access_token, user: data } })
       navigate('/admin/batches', { replace: true })
     } catch (err: any) {
-      setError(err?.response?.data?.detail || err?.message || 'Login failed')
+      const detail = err?.response?.data?.detail
+      const msg =
+        typeof detail === 'string'
+          ? detail
+          : Array.isArray(detail)
+            ? detail.map((d: any) => d?.msg || JSON.stringify(d)).join(', ')
+            : err?.message || 'Login failed'
+      setError(msg)
     } finally {
       setLoading(false)
     }

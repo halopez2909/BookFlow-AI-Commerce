@@ -11,7 +11,7 @@ export type ImportBatch = {
 
 export type BatchError = {
   id: string
-  batch_id: string
+  batch_id?: string
   row_number: number
   error_type: string
   message: string
@@ -41,3 +41,38 @@ export type Category = {
 }
 
 export type ConfigParams = Record<string, string>
+
+// ---------- Pricing domain types ----------
+
+export type PricingStatus = 'suggested' | 'applied' | 'pending' | 'overridden'
+
+export type PricingSource = {
+  name: string
+  url?: string
+  price?: number
+}
+
+export type PricingExplanation = {
+  summary: string
+  factors?: string[]
+  method?: string
+  notes?: string
+}
+
+export type PricingDecision = {
+  id: string
+  book_id: string
+  title: string
+  author: string
+  condition: string
+  suggested_price: number
+  final_price?: number
+  manual_price?: number
+  currency?: string
+  condition_factor: number
+  reference_count: number
+  sources: PricingSource[]
+  explanation: PricingExplanation | string
+  status: PricingStatus
+  updated_at?: string
+}
