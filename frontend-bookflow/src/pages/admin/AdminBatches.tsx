@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useInventoryBatches } from '../../hooks/useInventoryBatches'
 import BatchTable from '../../components/inventory/BatchTable'
 import FileUploader from '../../components/inventory/FileUploader'
@@ -11,6 +11,9 @@ export default function AdminBatches() {
   return (
     <div style={{ padding: 16, maxWidth: 1000, margin: '0 auto' }}>
       <h1>Import Batches</h1>
+      <div style={{ marginBottom: 12 }}>
+        <Link to="/admin/pricing">→ Panel de Pricing</Link>
+      </div>
       <section style={{ marginBottom: 16 }}>
         <FileUploader onResult={() => refetch()} />
       </section>

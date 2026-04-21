@@ -26,7 +26,11 @@ api.interceptors.response.use(
   (response) => response,
   (err) => {
     const status = err?.response?.status
-    if (status === 401) {
+    // Solo redirigir si ya NO estamos en /login, para no loopear,
+    // y solo si el usuario NO tiene token (sesión expirada real).
+    // Esto evita perder el estado in-memory cuando el backend
+    // tiene problemas de config y devuelve 401 espuriamente.
+    if (status === 401 && !getToken() && window.location.pathname !== '/login') {
       window.location.href = '/login'
     }
     return Promise.reject(err)
