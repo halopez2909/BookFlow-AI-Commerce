@@ -39,7 +39,13 @@ class EnrichBook:
             )
             result.request_id = saved_request.id
             saved_result = self.result_repo.save(result)
-            self.request_repo.update_status(saved_request.id, EnrichmentStatus.COMPLETED.value, "mock")
+
+            self.request_repo.update_status(
+                saved_request.id,
+                EnrichmentStatus.COMPLETED.value,
+                result.source_used or "fallback_interno"
+            )
+
             return EnrichmentResultResponse(
                 id=saved_result.id,
                 request_id=saved_result.request_id,
@@ -51,7 +57,11 @@ class EnrichBook:
                 metadata_json=saved_result.metadata_json,
             )
         except Exception as e:
-            self.request_repo.update_status(saved_request.id, EnrichmentStatus.FAILED.value, "")
+            self.request_repo.update_status(
+                saved_request.id,
+                EnrichmentStatus.FAILED.value,
+                None
+            )
             raise e
 
 
@@ -71,3 +81,23 @@ class GetEnrichmentRequest:
             requested_at=request.requested_at,
             source_used=request.source_used,
         )
+
+
+class GetEnrichmentRequestsByBookReference:
+
+    def __init__(self, request_repo: EnrichmentRequestRepository):
+        self.request_repo = request_repo
+
+    def execute(self, book_reference: str) -> list[EnrichmentRequestResponse]:
+        requests = self.request_repo.get_by_book_reference(book_reference)
+
+        return [
+            EnrichmentRequestResponse(
+                id=request.id,
+                book_reference=request.book_reference,
+                status=request.status,
+                requested_at=request.requested_at,
+                source_used=request.source_used,
+            )
+            for request in requests
+        ]

@@ -43,6 +43,7 @@ class EnrichmentResult:
         normalized_description: Optional[str],
         cover_url: Optional[str],
         metadata_json: Optional[dict],
+        source_used: Optional[str] = None,
     ):
         self.id = id
         self.request_id = request_id
@@ -52,3 +53,4 @@ class EnrichmentResult:
         self.normalized_description = normalized_description
         self.cover_url = cover_url
         self.metadata_json = metadata_json
+        self.source_used = source_used

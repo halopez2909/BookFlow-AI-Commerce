@@ -33,6 +33,15 @@ class EnrichmentRequestRepositoryPostgres(EnrichmentRequestRepository):
             return None
         return self._to_entity(model)
 
+    def get_by_book_reference(self, book_reference: str) -> list[EnrichmentRequest]:
+        models = (
+            self.db.query(EnrichmentRequestModel)
+            .filter(EnrichmentRequestModel.book_reference == book_reference)
+            .order_by(EnrichmentRequestModel.requested_at.desc())
+            .all()
+        )
+        return [self._to_entity(model) for model in models]
+
     def update_status(self, request_id: uuid.UUID, status: str, source_used: str) -> EnrichmentRequest:
         model = self.db.query(EnrichmentRequestModel).filter(EnrichmentRequestModel.id == request_id).first()
         model.status = status

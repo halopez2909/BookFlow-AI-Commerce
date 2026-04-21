@@ -11,7 +11,6 @@ MOCK_LATENCY_MS = int(os.getenv("MOCK_LATENCY_MS", 500))
 
 
 class MockEnrichmentProvider(EnrichmentProvider):
-
     async def enrich(self, book_reference: str, title: str, author: str, isbn: str) -> EnrichmentResult:
         await asyncio.sleep(MOCK_LATENCY_MS / 1000)
         return EnrichmentResult(
@@ -22,5 +21,10 @@ class MockEnrichmentProvider(EnrichmentProvider):
             normalized_publisher="[MOCK] Editorial Example",
             normalized_description="[MOCK] This is a mock description generated for testing purposes.",
             cover_url="https://via.placeholder.com/150",
-            metadata_json={"source": "mock", "book_reference": book_reference, "isbn": isbn},
+            metadata_json={
+                "source": "mock",
+                "book_reference": book_reference,
+                "isbn": isbn,
+            },
+            source_used="mock",
         )

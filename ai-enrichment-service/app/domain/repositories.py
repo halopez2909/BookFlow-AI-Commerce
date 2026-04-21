@@ -18,6 +18,10 @@ class EnrichmentRequestRepository(ABC):
     def update_status(self, request_id: uuid.UUID, status: str, source_used: str) -> EnrichmentRequest:
         pass
 
+    @abstractmethod
+    def get_by_book_reference(self, book_reference: str) -> list[EnrichmentRequest]:
+        pass
+
 
 class EnrichmentResultRepository(ABC):
 
