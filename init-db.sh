@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-
 psql -v ON_ERROR_STOP=1 --username "bookflow" <<-EOSQL
     CREATE DATABASE auth_db;
     CREATE DATABASE catalog_db;
@@ -8,4 +7,6 @@ psql -v ON_ERROR_STOP=1 --username "bookflow" <<-EOSQL
     CREATE DATABASE pricing_db;
     CREATE DATABASE enrichment_db;
     CREATE DATABASE assistant_db;
+    CREATE DATABASE normalization_db;
+    CREATE DATABASE integration_db;
 EOSQL
