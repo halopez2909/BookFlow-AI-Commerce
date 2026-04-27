@@ -74,6 +74,19 @@ services:
       - bookflow_network
 
 
+  audit-service:
+    build: ./audit-service
+    container_name: bookflow_audit
+    ports:
+      - "8007:8007"
+    env_file:
+      - ./audit-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
   normalization-service:
     build: ./normalization-service
     container_name: bookflow_normalization
