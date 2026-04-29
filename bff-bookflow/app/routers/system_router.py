@@ -1,6 +1,6 @@
-from fastapi import APIRouter
-import httpx
 import os
+import httpx
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/api/system", tags=["system"])
 
@@ -12,7 +12,10 @@ SERVICES = {
     "normalization-service": os.getenv("NORMALIZATION_URL", "http://normalization-service:8005"),
     "integration-service": os.getenv("INTEGRATION_URL", "http://integration-service:8006"),
     "audit-service": os.getenv("AUDIT_URL", "http://audit-service:8007"),
+    "pricing-service": os.getenv("PRICING_URL", "http://pricing-service:8008"),
+    "external-service": os.getenv("EXTERNAL_URL", "http://external-service:8009"),
 }
+
 
 @router.get("/health")
 async def system_health():

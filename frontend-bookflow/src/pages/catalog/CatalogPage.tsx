@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCatalog } from '../../hooks/useCatalog'
 import BookCard from '../../components/catalog/BookCard'
@@ -17,38 +17,67 @@ export default function CatalogPage() {
   }
 
   return (
-    <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>BookFlow Catalog</h1>
-        <a href="/login" style={{ fontSize: 13, color: '#555' }}>Admin Login</a>
-      </div>
-      <FilterBar title={titleInput} onTitleChange={handleTitleChange} />
-      {isError && <EmptyState message="Could not load catalog." onRetry={() => refetch()} />}
-      {isLoading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-          {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+    <>
+      <nav className="navbar">
+        <div className="navbar-brand">
+          Book<span>Flow</span>
         </div>
-      )}
-      {!isLoading && !isError && data?.items?.length === 0 && (
-        <EmptyState message="No books found. Try a different search." />
-      )}
-      {!isLoading && !isError && data?.items && data.items.length > 0 && (
-        <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-            {data.items.map((book) => (
-              <BookCard key={book.id} book={book} onClick={() => navigate('/catalog/' + book.id)} />
-            ))}
+        <div className="navbar-actions">
+          <a href="/login" className="btn btn-ghost" style={{ fontSize: 13 }}>
+            Admin
+          </a>
+        </div>
+      </nav>
+
+      <div className="page-container">
+        <div className="catalog-hero animate-in">
+          <h1>Discover Your Next Read</h1>
+          <p>{data?.total ? `${data.total} books available` : 'Explore our curated collection'}</p>
+        </div>
+
+        <FilterBar title={titleInput} onTitleChange={handleTitleChange} />
+
+        {isError && (
+          <div className="empty-state">
+            <div className="empty-state-icon">!</div>
+            <h3>Could not load catalog</h3>
+            <p>Something went wrong. Please try again.</p>
+            <button className="btn btn-primary" onClick={() => refetch()}>Retry</button>
           </div>
-          {data.items.length < data.total && (
-            <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <button onClick={fetchNextPage} style={{ padding: '10px 24px', cursor: 'pointer' }}>Load More</button>
+        )}
+
+        {isLoading && (
+          <div className="books-grid">
+            {Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        )}
+
+        {!isLoading && !isError && data?.items?.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-state-icon">📚</div>
+            <h3>No books found</h3>
+            <p>Try a different search term.</p>
+          </div>
+        )}
+
+        {!isLoading && !isError && data?.items && data.items.length > 0 && (
+          <>
+            <div className="books-grid">
+              {data.items.map((book, i) => (
+                <div key={book.id} style={{ animationDelay: `${i * 30}ms` }}>
+                  <BookCard book={book} onClick={() => navigate('/catalog/' + book.id)} />
+                </div>
+              ))}
             </div>
-          )}
-          <div style={{ marginTop: 12, color: '#888', fontSize: 13, textAlign: 'center' }}>
-            Showing {data.items.length} of {data.total} books
-          </div>
-        </>
-      )}
-    </div>
+            {data.items.length < data.total && (
+              <div className="load-more-section">
+                <button className="btn btn-ghost" onClick={fetchNextPage}>Load more books</button>
+              </div>
+            )}
+            <div className="books-count">Showing {data.items.length} of {data.total} books</div>
+          </>
+        )}
+      </div>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+﻿import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/apiClient'
 import { AuthContext } from '../context/AuthContext'
@@ -6,7 +6,6 @@ import { AuthContext } from '../context/AuthContext'
 export default function Login() {
   const { dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -28,38 +27,46 @@ export default function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: '48px auto', padding: 16 }}>
-      <h2 style={{ marginBottom: 12 }}>BookFlow - Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 8 }}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
-            autoComplete="email"
-          />
+    <div className="login-page">
+      <div className="login-bg-orb login-bg-orb-1" />
+      <div className="login-bg-orb login-bg-orb-2" />
+      <div className="login-card animate-in">
+        <div className="login-logo">Book<span>Flow</span></div>
+        <p className="login-subtitle">Admin Portal — Sign in to continue</p>
+        <form onSubmit={handleSubmit}>
+          <div className="login-field">
+            <label className="login-label" htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="admin@bookflow.com"
+              autoComplete="email"
+            />
+          </div>
+          <div className="login-field">
+            <label className="login-label" htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              autoComplete="current-password"
+            />
+          </div>
+          {error && <div className="login-error">{error}</div>}
+          <button type="submit" disabled={loading} className="btn btn-primary login-submit">
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+        <div className="login-back">
+          <a href="/catalog">Back to catalog</a>
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
-            autoComplete="current-password"
-          />
-        </div>
-        {error && <div style={{ color: 'crimson', marginBottom: 12 }}>{error}</div>}
-        <button type="submit" disabled={loading} style={{ padding: '8px 16px' }}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+      </div>
     </div>
   )
 }
