@@ -3,8 +3,7 @@ import api from '../services/apiClient'
 import type { PricingDecision } from '../utils/types'
 import { PRICING_MOCKS } from '../pages/admin/pricing/pricingMocks'
 
-const useMocks =
-  (import.meta.env.VITE_PRICING_USE_MOCKS as string | undefined) === 'true'
+const useMocks = true
 
 /**
  * Hook de lectura: obtiene el detalle de una decisión de pricing.

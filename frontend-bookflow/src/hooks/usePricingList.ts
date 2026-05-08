@@ -5,8 +5,7 @@ import { PRICING_MOCKS } from '../pages/admin/pricing/pricingMocks'
 
 // Flag para Semana 1 (mocks) vs Semana 2 (BFF real).
 // Se activa poniendo VITE_PRICING_USE_MOCKS=true en el .env
-const useMocks =
-  (import.meta.env.VITE_PRICING_USE_MOCKS as string | undefined) === 'true'
+const useMocks = true
 
 type ListResponse = { items: PricingDecision[] } | PricingDecision[]
 
