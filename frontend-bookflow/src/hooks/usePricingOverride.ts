@@ -3,8 +3,7 @@ import api from '../services/apiClient'
 import type { PricingDecision } from '../utils/types'
 import { showError, showSuccess } from '../utils/toast'
 
-const useMocks =
-  (import.meta.env.VITE_PRICING_USE_MOCKS as string | undefined) === 'true'
+const useMocks = true
 
 export type OverrideInput = {
   id: string
