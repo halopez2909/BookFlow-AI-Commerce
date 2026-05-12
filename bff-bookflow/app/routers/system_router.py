@@ -1,3 +1,7 @@
+"""System router (actualizado Sprint 3 - Dev 6 Jenn).
+Health check global de TODOS los microservicios incluyendo los nuevos del Sprint 3.
+"""
+import asyncio
 import os
 import httpx
 from fastapi import APIRouter
@@ -14,18 +18,28 @@ SERVICES = {
     "audit-service": os.getenv("AUDIT_URL", "http://audit-service:8007"),
     "pricing-service": os.getenv("PRICING_URL", "http://pricing-service:8008"),
     "external-service": os.getenv("EXTERNAL_URL", "http://external-service:8009"),
+    # Sprint 3 - Dev 6 Jenn agrega:
+    "cart-service": os.getenv("CART_URL", "http://cart-service:8010"),
+    "order-service": os.getenv("ORDER_URL", "http://order-service:8011"),
+    "ai-assistant-service": os.getenv("ASSISTANT_URL", "http://ai-assistant-service:8012"),
+    "recommender-service": os.getenv("RECOMMENDER_URL", "http://recommender-service:8013"),
 }
+
+
+async def _ping(name: str, url: str) -> tuple[str, dict]:
+    try:
+        async with httpx.AsyncClient(timeout=3) as client:
+            r = await client.get(f"{url}/health")
+            return name, {"status": "ok", "code": r.status_code}
+    except Exception as e:
+        return name, {"status": "error", "detail": str(e)}
 
 
 @router.get("/health")
 async def system_health():
-    results = {}
-    for name, url in SERVICES.items():
-        try:
-            async with httpx.AsyncClient(timeout=3) as client:
-                r = await client.get(f"{url}/health")
-                results[name] = {"status": "ok", "code": r.status_code}
-        except Exception as e:
-            results[name] = {"status": "error", "detail": str(e)}
+    """Health check global de todos los microservicios (paralelo)."""
+    tasks = [_ping(name, url) for name, url in SERVICES.items()]
+    pairs = await asyncio.gather(*tasks)
+    results = dict(pairs)
     overall = "ok" if all(v["status"] == "ok" for v in results.values()) else "degraded"
     return {"overall": overall, "services": results}

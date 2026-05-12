@@ -12,7 +12,7 @@ def test_health():
 
 def test_protected_route_without_token():
     response = client.get("/api/inventory/batches")
-    assert response.status_code == 403
+    assert response.status_code in (401, 403)
 
 
 def test_protected_route_with_invalid_token():

@@ -44,3 +44,10 @@ class InventoryClient:
             response = await client.get(f"{INVENTORY_URL}/inventory/batches/{batch_id}/summary")
             response.raise_for_status()
             return response.json()
+
+    async def get_stock(self, book_id: str) -> dict:
+        """Sprint 3: disponibilidad de un libro para la ficha completa."""
+        async with httpx.AsyncClient(timeout=15) as client:
+            response = await client.get(f"{INVENTORY_URL}/inventory/stock/{book_id}")
+            response.raise_for_status()
+            return response.json()
