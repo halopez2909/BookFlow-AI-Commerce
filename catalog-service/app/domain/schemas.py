@@ -2,7 +2,6 @@ from pydantic import BaseModel, field_validator
 from typing import Optional, List
 import uuid
 
-
 class BookCreateRequest(BaseModel):
     title: str
     author: str
@@ -34,7 +33,6 @@ class BookCreateRequest(BaseModel):
             raise ValueError("ISSN must have format XXXX-XXXX")
         return v
 
-
 class BookResponse(BaseModel):
     id: uuid.UUID
     title: str
@@ -49,9 +47,8 @@ class BookResponse(BaseModel):
     volume: Optional[str] = None
     enriched_flag: bool
     published_flag: bool
-
+    suggested_price: Optional[float] = None
     model_config = {"from_attributes": True}
-
 
 class BookListResponse(BaseModel):
     items: List[BookResponse]
@@ -59,15 +56,12 @@ class BookListResponse(BaseModel):
     page: int
     page_size: int
 
-
 class CategoryCreateRequest(BaseModel):
     name: str
     description: Optional[str] = None
-
 
 class CategoryResponse(BaseModel):
     id: uuid.UUID
     name: str
     description: Optional[str] = None
-
     model_config = {"from_attributes": True}

@@ -5,48 +5,42 @@ import BookCard from '../../components/catalog/BookCard'
 import SkeletonCard from '../../components/catalog/SkeletonCard'
 import FilterBar from '../../components/catalog/FilterBar'
 import EmptyState from '../../components/shared/EmptyState'
-
 export default function CatalogPage() {
   const navigate = useNavigate()
   const { data, isLoading, isError, refetch, filters, setFilters, fetchNextPage } = useCatalog()
   const [titleInput, setTitleInput] = useState('')
-
-  function handleTitleChange(v: string) {
-    setTitleInput(v)
-    setFilters({ ...filters, title: v })
-  }
-
+  function handleTitleChange(v: string) { setTitleInput(v); setFilters({ ...filters, title: v }) }
   return (
-    <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h1 style={{ margin: 0 }}>BookFlow Catalog</h1>
-        <a href="/login" style={{ fontSize: 13, color: '#555' }}>Admin Login</a>
+    <div className="page">
+      <div className="catalog-hero">
+        <h1>Libreria BookFlow</h1>
+        <p>{data?.total ? `${data.total} libros disponibles` : 'Explora nuestra coleccion'}</p>
       </div>
-      <FilterBar title={titleInput} onTitleChange={handleTitleChange} />
-      {isError && <EmptyState message="Could not load catalog." onRetry={() => refetch()} />}
+      <FilterBar
+        title={titleInput} onTitleChange={handleTitleChange}
+        minPrice={filters.min_price} maxPrice={filters.max_price}
+        onMinPriceChange={v=>setFilters({...filters,min_price:v})}
+        onMaxPriceChange={v=>setFilters({...filters,max_price:v})}
+        available={filters.available} onAvailableChange={v=>setFilters({...filters,available:v})}
+      />
+      {isError && <EmptyState message="No se pudo cargar el catalogo." onRetry={()=>refetch()} />}
       {isLoading && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-          {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
-        </div>
+        <div className="books-grid">{Array.from({length:12}).map((_,i)=><SkeletonCard key={i} />)}</div>
       )}
-      {!isLoading && !isError && data?.items?.length === 0 && (
-        <EmptyState message="No books found. Try a different search." />
-      )}
+      {!isLoading && !isError && data?.items?.length === 0 && <EmptyState message="No se encontraron libros." />}
       {!isLoading && !isError && data?.items && data.items.length > 0 && (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-            {data.items.map((book) => (
-              <BookCard key={book.id} book={book} onClick={() => navigate('/catalog/' + book.id)} />
+          <div className="books-grid">
+            {data.items.map(book=>(
+              <BookCard key={book.id} book={book} onClick={()=>navigate('/catalog/'+book.id)} />
             ))}
           </div>
           {data.items.length < data.total && (
-            <div style={{ textAlign: 'center', marginTop: 24 }}>
-              <button onClick={fetchNextPage} style={{ padding: '10px 24px', cursor: 'pointer' }}>Load More</button>
+            <div className="load-more">
+              <button className="btn btn-ghost" onClick={fetchNextPage}>Cargar mas libros</button>
             </div>
           )}
-          <div style={{ marginTop: 12, color: '#888', fontSize: 13, textAlign: 'center' }}>
-            Showing {data.items.length} of {data.total} books
-          </div>
+          <div className="books-count">Mostrando {data.items.length} de {data.total} libros</div>
         </>
       )}
     </div>

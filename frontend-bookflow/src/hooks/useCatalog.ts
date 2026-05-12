@@ -2,36 +2,32 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import api from '../services/apiClient'
 import type { Book } from '../utils/types'
-import { useDebounce } from './useDebounce'
-
-type Filters = { title?: string; category_id?: string }
-type CatalogResponse = { items: Book[]; total: number; page: number; page_size: number }
-
+type CatalogData = { items: Book[]; total: number; page: number; page_size: number }
+type Filters = { title?: string; min_price?: number; max_price?: number; available?: boolean }
 export function useCatalog() {
-  const [filters, setFilters] = useState<Filters>({})
+  const [filters, setFiltersState] = useState<Filters>({})
   const [page, setPage] = useState(1)
-  const PAGE_SIZE = 20
-  const debouncedTitle = useDebounce(filters.title, 300)
-
-  const query = useQuery<CatalogResponse, Error>({
-    queryKey: ['catalog', 'books', debouncedTitle, filters.category_id, page],
+  const [extraItems, setExtraItems] = useState<Book[]>([])
+  const { data, isLoading, isError, refetch } = useQuery<CatalogData>({
+    queryKey: ['catalog', filters, page],
     queryFn: async () => {
-      const params: Record<string, any> = { page, page_size: PAGE_SIZE }
-      if (debouncedTitle) params.title = debouncedTitle
-      if (filters.category_id) params.category_id = filters.category_id
-      const { data } = await api.get('/api/catalog/books', { params })
+      const params: Record<string, string> = { page: String(page), page_size: '20' }
+      if (filters.title) params.title = filters.title
+      if (filters.min_price !== undefined) params.min_price = String(filters.min_price)
+      if (filters.max_price !== undefined) params.max_price = String(filters.max_price)
+      if (filters.available) params.available = 'true'
+      const { data } = await api.get<CatalogData>('/api/catalog/books', { params })
       return data
     },
-    staleTime: 1000 * 60,
-    retry: 1,
+    staleTime: 1000 * 30,
   })
-
-  return {
-    ...query,
-    filters,
-    setFilters,
-    page,
-    fetchNextPage: () => setPage(p => p + 1),
-    PAGE_SIZE,
+  function fetchNextPage() {
+    if (data && (data.items.length + extraItems.length) < data.total) {
+      setExtraItems(prev => [...prev, ...(data.items ?? [])])
+      setPage(p => p + 1)
+    }
   }
+  function setFilters(f: Filters) { setFiltersState(f); setPage(1); setExtraItems([]) }
+  const items = page === 1 ? (data?.items ?? []) : extraItems
+  return { data: data ? { ...data, items } : undefined, isLoading, isError, refetch, filters, setFilters, fetchNextPage }
 }
