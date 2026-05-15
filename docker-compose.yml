@@ -73,7 +73,6 @@ services:
     networks:
       - bookflow_network
 
-
   audit-service:
     build: ./audit-service
     container_name: bookflow_audit
@@ -135,6 +134,26 @@ services:
       - ./external-service/.env
     networks:
       - bookflow_network
+
+  ai-assistant-service:
+    build: ./ai-assistant-service
+    container_name: bookflow_assistant
+    ports:
+      - "8010:8010"
+    env_file:
+      - ./ai-assistant-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      catalog-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
+      pricing-service:
+        condition: service_started
+    networks:
+      - bookflow_network
+
   bff-bookflow:
     build: ./bff-bookflow
     container_name: bookflow_bff
@@ -150,6 +169,8 @@ services:
       catalog-service:
         condition: service_started
       ai-enrichment-service:
+        condition: service_started
+      ai-assistant-service:
         condition: service_started
     networks:
       - bookflow_network
