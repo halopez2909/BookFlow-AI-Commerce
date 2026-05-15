@@ -1,46 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useConfigParams } from '../../hooks/useConfigParams'
-import { showSuccess, showError } from '../../utils/toast'
-
 export default function AdminConfig() {
-  const { data, isLoading, error, save } = useConfigParams()
-  const [form, setForm] = useState<Record<string, any>>({})
-
-  useEffect(() => {
-    if (data) setForm(data)
-  }, [data])
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    try {
-      await save(form)
-      showSuccess('Parameters saved successfully')
-    } catch (err: any) {
-      showError(err?.response?.data?.detail || err?.message || 'Error saving parameters')
-    }
-  }
-
-  if (isLoading) return <div>Loading...</div>
-  if (error) return <div style={{ color: 'crimson' }}>Error: {String(error)}</div>
-
+  const navigate = useNavigate()
+  const { params, isLoading } = useConfigParams()
   return (
-    <div style={{ padding: 16, maxWidth: 600, margin: '0 auto' }}>
-      <h1>System Configuration</h1>
-      <form onSubmit={handleSubmit}>
-        {Object.entries(form || {}).map(([k, v]) => (
-          <div key={k} style={{ marginBottom: 12 }}>
-            <label style={{ display: 'block', fontWeight: 500 }}>{k}</label>
-            <input
-              value={v as string}
-              onChange={(e) => setForm({ ...form, [k]: e.target.value })}
-              style={{ display: 'block', width: '100%', padding: 8, marginTop: 4 }}
-            />
+    <>
+      <div className="admin-nav">
+        <button className="admin-nav-btn" onClick={()=>navigate('/admin/batches')}>Inventario</button>
+        <button className="admin-nav-btn" onClick={()=>navigate('/admin/pricing')}>Pricing</button>
+        <button className="admin-nav-btn active" onClick={()=>navigate('/admin/config')}>Configuracion</button>
+      </div>
+      <div className="page">
+        <div className="page-header"><h1>Configuracion del Sistema</h1><p>Parametros configurables sin tocar el codigo</p></div>
+        {isLoading ? <div style={{color:'var(--text-3)'}}>Cargando...</div> : (
+          <div className="table-wrap">
+            <table><thead><tr><th>Parametro</th><th>Valor</th></tr></thead>
+              <tbody>{Object.entries(params||{}).map(([k,v])=><tr key={k}><td style={{fontFamily:'monospace',fontSize:12}}>{k}</td><td>{v as string}</td></tr>)}</tbody>
+            </table>
           </div>
-        ))}
-        <button type="submit" style={{ padding: '8px 16px' }}>
-          Save Parameters
-        </button>
-      </form>
-    </div>
+        )}
+      </div>
+    </>
   )
 }

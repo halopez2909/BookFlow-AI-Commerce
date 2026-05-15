@@ -1,43 +1,26 @@
 import React from 'react'
 import type { Book } from '../../utils/types'
-
-type Props = {
-  book: Book
-  onClick?: () => void
-}
-
+import EnrichmentBadge from './EnrichmentBadge'
+import PriceSummary from './PriceSummary'
+type Props = { book: Book; onClick?: () => void }
 export default function BookCard({ book, onClick }: Props) {
+  const initials = book.title.split(' ').slice(0,2).map((w:string)=>w[0]).join('').toUpperCase()
   return (
-    <div
-      onClick={onClick}
-      style={{
-        border: '1px solid #eee',
-        borderRadius: 8,
-        padding: 16,
-        cursor: onClick ? 'pointer' : 'default',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8,
-        background: '#fff',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-        transition: 'box-shadow 0.2s',
-      }}
-    >
-      {book.cover_url && (
-        <img
-          src={book.cover_url}
-          alt={book.title}
-          style={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 4 }}
-        />
-      )}
-      <div style={{ fontWeight: 600, fontSize: 15 }}>{book.title}</div>
-      <div style={{ color: '#555', fontSize: 13 }}>{book.author}</div>
-      <div style={{ color: '#888', fontSize: 12 }}>{book.publisher}</div>
-      {book.published_flag && (
-        <span style={{ background: '#e6f4ea', color: '#2d7a3a', padding: '2px 8px', borderRadius: 12, fontSize: 11, alignSelf: 'flex-start' }}>
-          Available
-        </span>
-      )}
+    <div className="book-card fade-in" onClick={onClick}>
+      {book.cover_url
+        ? <img className="book-card-img" src={book.cover_url} alt={book.title} loading="lazy"
+            onError={(e)=>{const t=e.currentTarget as HTMLImageElement;t.style.display='none';const p=t.nextElementSibling as HTMLElement;if(p)p.style.display='flex';}} />
+        : null}
+      <div className="book-card-placeholder" style={{display:book.cover_url?'none':'flex'}}>{initials}</div>
+      <div className="book-card-body">
+        <EnrichmentBadge isEnriched={book.enriched_flag} />
+        <div className="book-card-title">{book.title}</div>
+        <div className="book-card-author">{book.author}</div>
+        <div className="book-card-footer">
+          <PriceSummary suggestedPrice={book.suggested_price} />
+          {book.published_flag && <span className="badge badge-available">Disponible</span>}
+        </div>
+      </div>
     </div>
   )
 }

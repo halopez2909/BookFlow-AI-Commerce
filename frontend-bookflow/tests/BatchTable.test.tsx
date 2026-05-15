@@ -7,7 +7,7 @@ const batches = [
     id: "1",
     file_name: "a.csv",
     upload_date: new Date().toISOString(),
-    total_rows: 10,
+    processed_rows: 10,
     valid_rows: 8,
     invalid_rows: 2,
     status: "processed"

@@ -104,9 +104,7 @@ export default function PricingTable({
                   )}
                 </td>
                 <td style={{ padding: 8 }}>
-                  {p.sources.length > 0
-                    ? p.sources.map((s) => s.name).join(', ')
-                    : '-'}
+                  {p.reference_count && p.reference_count > 0 ? `${p.reference_count} fuente(s)` : '-'}
                 </td>
                 <td style={{ padding: 8 }}>
                   <PricingStatusBadge status={p.status} />

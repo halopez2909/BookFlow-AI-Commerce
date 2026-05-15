@@ -2,34 +2,28 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-
 class ISBN:
     def __init__(self, value: str):
         clean = value.replace("-", "").replace(" ", "")
         if len(clean) not in (10, 13) or not clean.isdigit():
             raise ValueError(f"Invalid ISBN: {value}")
         self.value = clean
-
     def __str__(self):
         return self.value
-
 
 class ISSN:
     def __init__(self, value: str):
         if not value or len(value) != 9 or value[4] != "-":
             raise ValueError(f"Invalid ISSN format: {value}")
         self.value = value
-
     def __str__(self):
         return self.value
-
 
 class Category:
     def __init__(self, id: uuid.UUID, name: str, description: Optional[str] = None):
         self.id = id
         self.name = name
         self.description = description
-
 
 class Book:
     def __init__(
@@ -47,7 +41,8 @@ class Book:
         volume: Optional[str] = None,
         enriched_flag: bool = False,
         published_flag: bool = False,
-        created_at: Optional[datetime] = None,
+        suggested_price: Optional[float] = None,
+        created_at=None,
     ):
         self.id = id
         self.title = title
@@ -62,4 +57,5 @@ class Book:
         self.volume = volume
         self.enriched_flag = enriched_flag
         self.published_flag = published_flag
+        self.suggested_price = suggested_price
         self.created_at = created_at or datetime.utcnow()
