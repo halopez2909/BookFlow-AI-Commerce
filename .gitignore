@@ -1,25 +1,10 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-.coverage
-
-# Env files - NO subir secretos
 .env
 *.env.local
-
-# Node
 node_modules/
-dist/
-build/
-
-# IDEs
 .vscode/
 .idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Datos pesados
 Dataset_Bookflow.xlsx
-test_inventory.xlsx
+Guia_Sprint3_Aldana.docx
