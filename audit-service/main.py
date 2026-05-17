@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers.audit_router import router as audit_router
 from app.infrastructure.database import create_tables
 
-app = FastAPI(title="Audit Service", version="1.0.0")
+app = FastAPI(title="Audit Service", version="2.0.0", description="Sprint 3 — Auditoría Global del Sistema")
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,4 +24,4 @@ app.include_router(audit_router)
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "audit-service"}
+    return {"status": "ok", "service": "audit-service", "version": "2.0.0"}
