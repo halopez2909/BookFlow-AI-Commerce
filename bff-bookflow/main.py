@@ -11,6 +11,8 @@ from app.routers.pricing_router import router as pricing_router
 from app.routers.audit_router import router as audit_router
 from app.routers.integration_router import router as integration_router
 from app.routers.system_router import router as system_router
+from app.routers.recommendations_router import router as recommendations_router
+app.include_router(recommendations_router)
 
 load_dotenv()
 
