@@ -1,20 +1,11 @@
 import React from 'react'
-
-type Props = {
-  message?: string
-  onRetry?: () => void
-}
-
-export default function EmptyState({ message = 'No results found', onRetry }: Props) {
+type Props = { message: string; onRetry?: () => void }
+export default function EmptyState({ message, onRetry }: Props) {
   return (
-    <div style={{ textAlign: 'center', padding: 48, color: '#888' }}>
-      <div style={{ fontSize: 48, marginBottom: 16 }}>??</div>
-      <div style={{ fontSize: 16, marginBottom: 12 }}>{message}</div>
-      {onRetry && (
-        <button onClick={onRetry} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-          Retry
-        </button>
-      )}
+    <div className="empty-state">
+      <div style={{fontSize:40,marginBottom:12,opacity:0.4}}>📚</div>
+      <p>{message}</p>
+      {onRetry && <button className="btn btn-ghost" onClick={onRetry} style={{marginTop:16}}>Reintentar</button>}
     </div>
   )
 }

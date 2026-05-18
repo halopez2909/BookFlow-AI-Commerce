@@ -1,13 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '../services/apiClient'
-
-export type BatchError = {
-  id: string
-  row_number: number
-  error_type: string
-  message: string
-  fix_hint?: string
-}
+import type { BatchError } from '../utils/types'
 
 export function useBatchErrors(batchId?: string) {
   return useQuery<BatchError[], Error>({
