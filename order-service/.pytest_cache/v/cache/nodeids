@@ -1,0 +1,10 @@
+[
+  "tests/test_create_order.py::test_create_order_no_stock",
+  "tests/test_create_order.py::test_create_order_success",
+  "tests/test_order_status.py::test_cancel_confirmed_restores_stock",
+  "tests/test_order_status.py::test_invalid_transition_pending_to_delivered",
+  "tests/test_order_status.py::test_valid_transition_pending_to_confirmed",
+  "tests/test_stock_deduction.py::test_check_availability_insufficient_stock",
+  "tests/test_stock_deduction.py::test_check_availability_service_down",
+  "tests/test_stock_deduction.py::test_check_availability_sufficient_stock"
+]
