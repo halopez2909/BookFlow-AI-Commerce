@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.env.local
+node_modules/
+.vscode/
+.idea/
+Dataset_Bookflow.xlsx
+Guia_Sprint3_Aldana.docx
