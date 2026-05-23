@@ -1,7 +1,5 @@
 version: "3.9"
-
 services:
-
   postgres:
     image: postgres:15
     container_name: bookflow_postgres
@@ -73,20 +71,6 @@ services:
     networks:
       - bookflow_network
 
-
-  audit-service:
-    build: ./audit-service
-    container_name: bookflow_audit
-    ports:
-      - "8007:8007"
-    env_file:
-      - ./audit-service/.env
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - bookflow_network
-
   normalization-service:
     build: ./normalization-service
     container_name: bookflow_normalization
@@ -113,6 +97,19 @@ services:
     networks:
       - bookflow_network
 
+  audit-service:
+    build: ./audit-service
+    container_name: bookflow_audit
+    ports:
+      - "8007:8007"
+    env_file:
+      - ./audit-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
   pricing-service:
     build: ./pricing-service
     container_name: bookflow_pricing
@@ -133,8 +130,65 @@ services:
       - "8009:8009"
     env_file:
       - ./external-service/.env
+    depends_on:
+      - auth-service
+      - inventory-service
+      - catalog-service
+      - ai-enrichment-service
     networks:
       - bookflow_network
+
+  order-service:
+    build: ./order-service
+    container_name: bookflow_order
+    ports:
+      - "8010:8010"
+    env_file:
+      - ./order-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  cart-service:
+    build: ./cart-service
+    container_name: bookflow_cart
+    ports:
+      - "8011:8011"
+    env_file:
+      - ./cart-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  ai-assistant-service:
+    build: ./ai-assistant-service
+    container_name: bookflow_assistant
+    ports:
+      - "8012:8012"
+    env_file:
+      - ./ai-assistant-service/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - bookflow_network
+
+  recommender-service:
+    build: ./recommender-service
+    container_name: bookflow_recommender
+    ports:
+      - "8090:8090"
+    env_file:
+      - ./recommender-service/.env
+    depends_on:
+      - catalog-service
+    networks:
+      - bookflow_network
+
   bff-bookflow:
     build: ./bff-bookflow
     container_name: bookflow_bff
@@ -143,14 +197,10 @@ services:
     env_file:
       - ./bff-bookflow/.env
     depends_on:
-      auth-service:
-        condition: service_started
-      inventory-service:
-        condition: service_started
-      catalog-service:
-        condition: service_started
-      ai-enrichment-service:
-        condition: service_started
+      - auth-service
+      - inventory-service
+      - catalog-service
+      - ai-enrichment-service
     networks:
       - bookflow_network
 
