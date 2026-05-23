@@ -11,11 +11,14 @@ SERVICES = [
     ("pricing-service",       "http://localhost:8008/health"),
     ("external-service",      "http://localhost:8009/health"),
     ("order-service",         "http://localhost:8010/health"),
+    ("cart-service",          "http://localhost:8011/health"),
+    ("ai-assistant-service",  "http://localhost:8012/health"),
+    ("recommender-service",   "http://localhost:8090/health"),
     ("bff-bookflow",          "http://localhost:8000/health"),
 ]
 
 print("\n" + "="*60)
-print("BOOKFLOW AI COMMERCE - HEALTH CHECK")
+print("BOOKFLOW AI COMMERCE - HEALTH CHECK SPRINT 3")
 print("="*60)
 
 all_ok = True

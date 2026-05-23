@@ -5,9 +5,19 @@ from enum import Enum
 
 
 class EventType(str, Enum):
+    # Sprint 2 — eventos originales
     PRICING_DECISION = "pricing_decision"
     ENRICHMENT_COMPLETED = "enrichment_completed"
     NORMALIZATION_APPLIED = "normalization_applied"
+
+    # Sprint 3 — nuevos eventos del sistema completo
+    CART_ADD = "cart_add"
+    CART_REMOVE = "cart_remove"
+    ORDER_CREATED = "order_created"
+    ORDER_CONFIRMED = "order_confirmed"
+    ORDER_CANCELLED = "order_cancelled"
+    ASSISTANT_QUERY = "assistant_query"
+    RECOMMENDATION_VIEWED = "recommendation_viewed"
 
 
 class AuditEvent:
